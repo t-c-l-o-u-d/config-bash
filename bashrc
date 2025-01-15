@@ -89,20 +89,6 @@ export PROMPT_DIRTRIM=3
 
 PS1="\n${PS1_DATE}\n${PS1_USER}@${PS1_HOST}: \w \n\$ "
 
-# =========
-# ssh agent
-# =========
-# ensure ssh-agent is running
-if [ -z "${SSH_AUTH_SOCK}" ]; then
-    # check for a currently running instance of the agent
-    RUNNING_AGENT="$(pgrep 'ssh-agent -s' | grep -v grep | wc -l | tr -d '[:space:]')"
-    if [ "${RUNNING_AGENT}" = "0" ]; then
-        # launch a new instance of the agent
-        ssh-agent -s &> "${HOME}/.ssh/ssh-agent"
-    fi
-    read -r SSH_AGENT < "${HOME}"/.ssh/ssh-agent && eval "$SSH_AGENT" > /dev/null
-fi
-
 # =======
 # aliases
 # =======
