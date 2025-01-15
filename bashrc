@@ -100,7 +100,7 @@ if [ -z "${SSH_AUTH_SOCK}" ]; then
         # launch a new instance of the agent
         ssh-agent -s &> "${HOME}/.ssh/ssh-agent"
     fi
-        eval "$(cat "${HOME}"/.ssh/ssh-agent)" > /dev/null
+    read -r SSH_AGENT < "${HOME}"/.ssh/ssh-agent && eval "$SSH_AGENT" > /dev/null
 fi
 
 # =======
