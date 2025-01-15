@@ -1,0 +1,48 @@
+// GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+// Documentation: https://containers.dev/implementors/json_reference/
+{
+    "name": "${localWorkspaceFolderBasename}-devcontainer",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "context": "..",
+        "args": {
+            "USER": "${localEnv:USER}"
+        },
+        "options": [
+            "--squash-all",
+            "--pull=always"
+        ]
+    },
+    "remoteUser": "${localEnv:USER}",
+    "updateRemoteUserUID": true,
+    "workspaceMount": "",
+    "runArgs": [
+        "--hostname=${localWorkspaceFolderBasename}-devcontainer",
+        "--name=${localWorkspaceFolderBasename}-devcontainer",
+        "--userns=keep-id",
+        "--volume=${localWorkspaceFolder}:/workspaces/${localWorkspaceFolderBasename}:Z"
+       ],
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "breadcrumbs.enabled": true,
+                "editor.minimap.enabled": false,
+                "editor.stickyScroll.enabled": false,
+                "files.autoSave": "onFocusChange",
+                "files.autoSaveWorkspaceFilesOnly": true,
+                "files.autoSaveWhenNoErrors": true,
+                "git.autofetch": true,
+                "git.confirmSync": false,
+                "git.openRepositoryInParentFolders": "always",
+                "workbench.startupEditor": "none",
+                "workbench.welcomePage.walkthroughs.openOnInstall": false
+                // repository specific settings go here
+            },
+            "extensions": [
+                "ms-azuretools.vscode-docker",
+                // repository specific extensions go here
+                "mads-hartmann.bash-ide-vscode"
+            ]
+        }
+    }
+}
