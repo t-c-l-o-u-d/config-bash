@@ -65,12 +65,14 @@ rpm_extract() {
 }
 
 podman_rma() {
-    podman stop --all
-    buildah rm --all
-    buildah rmi --all
-    podman rm --all
-    podman rmi --all
-    podman system prune -af
+    podman stop --all || true
+    buildah rm --all || true
+    buildah rmi --all || true
+    podman rm --all || true
+    podman rmi --all || true
+    podman system prune --all --force || true
+    podman system prune --external --force || true
+    echo "Volumes were preserved. To remove them execute: 'podman system prune --volumes'"
 }
 
 
