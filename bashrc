@@ -6,15 +6,16 @@
 # ===============================================================
 # see bash(1) for more details
 case $- in
-    *i*) ;; # interactive shell; evaluate file
-    *) return;; # non-interactive shell; do not evaluate file
+*i*) ;;      # interactive shell; evaluate file
+*) return ;; # non-interactive shell; do not evaluate file
 esac
 
 # ==============
 # general config
 # ==============
-if [[ -s /etc/bashrc ]]; then
-    source /etc/bashrc
+# check for bash completion
+if [[ -s /usr/share/bash-completion/bash_completion ]]; then
+	source /usr/share/bash-completion/bash_completion
 fi
 
 # waiting for bash to support this fully
@@ -26,18 +27,18 @@ export XDG_STATE_HOME="${HOME}/.local/state"
 # ${XDG_CONFIG_HOME}/bash: ensure bash has a directory in XDG_CONFIG_HOME
 # ${XDG_STATE_HOME}/bash: ensure bash has a directory in XDG_STATE_HOME
 mkdir --parents "${HOME}/.local/bin" \
-                "${XDG_CONFIG_HOME}/bash" \
-                "${XDG_STATE_HOME}/bash"
+	"${XDG_CONFIG_HOME}/bash" \
+	"${XDG_STATE_HOME}/bash"
 
 # ensure the PATH sources binaries
 if [[ ! "${PATH}" =~ ${HOME}/.local/bin ]]; then
-    export PATH="${PATH}:${HOME}/.local/bin"
+	export PATH="${PATH}:${HOME}/.local/bin"
 fi
 
 # ensure vim is the default editor
 if command -v vim &>/dev/null; then
-    export EDITOR=vim
-    export VISUAL="${EDITOR}"
+	export EDITOR=vim
+	export VISUAL="${EDITOR}"
 fi
 
 # ====================
@@ -94,45 +95,45 @@ PS1="\n${PS1_DATE}\n${PS1_USER}@${PS1_HOST}: \w \n\$ "
 # =========
 # ensure ssh-agent is running
 if [ -z "${SSH_AUTH_SOCK}" ]; then
-    # check for a currently running instance of the agent
-    RUNNING_AGENT="$(pgrep 'ssh-agent -s' | grep -v grep | wc -l | tr -d '[:space:]')"
-    if [ "${RUNNING_AGENT}" = "0" ]; then
-        # launch a new instance of the agent
-        ssh-agent -s &> "${HOME}/.ssh/ssh-agent"
-    fi
-        eval "$(cat "${HOME}"/.ssh/ssh-agent)" > /dev/null
+	# check for a currently running instance of the agent
+	RUNNING_AGENT="$(pgrep -c 'ssh-agent -s')"
+	if [ "${RUNNING_AGENT}" = "0" ]; then
+		# launch a new instance of the agent
+		ssh-agent -s &>"${HOME}/.ssh/ssh-agent"
+	fi
+	eval "$(cat "${HOME}"/.ssh/ssh-agent)" >/dev/null
 fi
 
 # =======
 # aliases
 # =======
 if [[ -s "${XDG_CONFIG_HOME}/bash/aliases" ]]; then
-    # shellcheck source=/dev/null
-    source "${XDG_CONFIG_HOME}/bash/aliases"
+	# shellcheck source=/dev/null
+	source "${XDG_CONFIG_HOME}/bash/aliases"
 fi
 
 # =========
 # functions
 # =========
 if [[ -s "${XDG_CONFIG_HOME}/bash/functions" ]]; then
-    # shellcheck source=/dev/null
-    source "${XDG_CONFIG_HOME}/bash/functions"
+	# shellcheck source=/dev/null
+	source "${XDG_CONFIG_HOME}/bash/functions"
 fi
 
 # =============
 # host specific
 # =============
-if [[ -s "${XDG_CONFIG_HOME}/bash/$(read -r KERNEL_HOSTNAME < /proc/sys/kernel/hostname && echo "$KERNEL_HOSTNAME")" ]]; then
-    # shellcheck source=/dev/null
-    source "${XDG_CONFIG_HOME}/bash/$(read -r KERNEL_HOSTNAME < /proc/sys/kernel/hostname && echo "$KERNEL_HOSTNAME")"
+if [[ -s "${XDG_CONFIG_HOME}/bash/$(read -r KERNEL_HOSTNAME </proc/sys/kernel/hostname && echo "$KERNEL_HOSTNAME")" ]]; then
+	# shellcheck source=/dev/null
+	source "${XDG_CONFIG_HOME}/bash/$(read -r KERNEL_HOSTNAME </proc/sys/kernel/hostname && echo "$KERNEL_HOSTNAME")"
 fi
 
 # ===========
 # root config
 # ===========
 if [[ "${EUID}" = 0 ]]; then
-    PS1_ROOT_USER="\[${_RED}\]\u\[${_NORMAL}\]"
-    PS1_ROOT_HOST="\[${_YELLOW}\]\H\[${_NORMAL}\]"
+	PS1_ROOT_USER="\[${_RED}\]\u\[${_NORMAL}\]"
+	PS1_ROOT_HOST="\[${_YELLOW}\]\H\[${_NORMAL}\]"
 
-    PS1="\n$PS1_DATE\n$PS1_ROOT_USER@$PS1_ROOT_HOST: \w \n\\$ "
+	PS1="\n$PS1_DATE\n$PS1_ROOT_USER@$PS1_ROOT_HOST: \w \n\\$ "
 fi
