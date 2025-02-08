@@ -49,6 +49,10 @@ extract() {
     fi
 }
 
+compress() {
+   tar --create --gzip --file $(basename ${1}).tar.gz ${1}
+}
+
 # open directory in VSCode
 open() {
     { nohup code "${1}" >/dev/null 2>&1 & disown; } 2>/dev/null; sleep .1;
