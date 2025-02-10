@@ -81,14 +81,21 @@ _WHITE=$(tput setaf 15)
 _BRIGHT=$(tput bold)
 _NORMAL=$(tput sgr0)
 
-PS1_DATE="\[${_DARK_GRAY}\]\D{%Y-%m-%d %T %Z}\[${_NORMAL}\]"
+#PS1_DATE="\[${_DARK_GRAY}\]\D{%Y-%m-%d %T %Z}\[${_NORMAL}\]"
 PS1_HOST="\[${_GREEN}\]\H\[${_NORMAL}\]"
 PS1_USER="\[${_CYAN}\]\u\[${_NORMAL}\]"
+
+
+# container detection - podman
+if [[ -s /run/.containerenv ]]; then
+    _CNT_HOSTNAME="$(awk -F '[="]' '/name/{ print $3 }' /run/.containerenv) $(echo -e '\U0001F4E6')"
+    PS1_HOST="\[${_YELLOW}\]\[${_CNT_HOSTNAME}\]\[${_NORMAL}\]"
+fi
 
 # sets the max path length
 export PROMPT_DIRTRIM=3
 
-PS1="\n${PS1_DATE}\n${PS1_USER}@${PS1_HOST}: \w \n\$ "
+PS1="\n${PS1_USER}@${PS1_HOST}: \w \n\$ "
 
 # =========
 # ssh agent
