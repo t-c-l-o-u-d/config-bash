@@ -22,6 +22,7 @@ fi
 # https://savannah.gnu.org/support/?108134
 export XDG_CONFIG_HOME="${HOME}/.config"
 export XDG_STATE_HOME="${HOME}/.local/state"
+export XDG_CACHE_HOME="${HOME}/.cache"
 
 # ${HOME}/.local/bin: ensure there is a place to store binaries
 # ${XDG_CONFIG_HOME}/bash: ensure bash has a directory in XDG_CONFIG_HOME
