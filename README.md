@@ -1,4 +1,4 @@
-<!-- GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt) -->
+<!-- GNU Affero General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/agpl.txt) -->
 
 ## About
 This repository was designed to be used as a [submodule](https://git-scm.com/docs/git-submodule) in other projects.

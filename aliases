@@ -1,5 +1,5 @@
 #!/usr/bin/bash
-# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+# GNU Affero General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/agpl.txt)
 # https://www.shellcheck.net/wiki/SC2139: single quotes are used intentionally
 
 alias cp='cp --interactive'
