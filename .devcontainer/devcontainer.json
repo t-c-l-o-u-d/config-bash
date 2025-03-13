@@ -3,22 +3,26 @@
 {
     "name": "${localWorkspaceFolderBasename}-devcontainer",
     "build": {
-        "dockerfile": "Dockerfile",
+        "dockerfile": "Containerfile",
         "context": "..",
         "args": {
             "USER": "${localEnv:USER}"
         },
         "options": [
-            "--squash-all",
-            "--pull=always"
+            "--platform=linux/amd64",
+            "--pull=newer",
+            "--squash-all"
         ]
     },
     "remoteUser": "${localEnv:USER}",
     "updateRemoteUserUID": true,
     "workspaceMount": "",
     "runArgs": [
+        //set your timezone here
+        "--env=TZ=Etc/UTC",
         "--hostname=${localWorkspaceFolderBasename}-devcontainer",
         "--name=${localWorkspaceFolderBasename}-devcontainer",
+        "--platform=linux/amd64",
         "--userns=keep-id",
         "--volume=${localWorkspaceFolder}:/workspaces/${localWorkspaceFolderBasename}:Z"
        ],
@@ -26,17 +30,17 @@
         "vscode": {
             "settings": {
                 "breadcrumbs.enabled": true,
+                "editor.codeLensFontFamily": "'IBM Plex Mono'",
+                "editor.fontFamily": "'IBM Plex Mono'",
                 "editor.minimap.enabled": false,
                 "editor.stickyScroll.enabled": false,
-                "files.autoSave": "onFocusChange",
-                "files.autoSaveWhenNoErrors": true,
-                "files.autoSaveWorkspaceFilesOnly": true,
                 "git.autofetch": true,
                 "git.confirmSync": false,
-                "git.openRepositoryInParentFolders": "always",
+                "markdown.preview.fontFamily": "'IBM Plex Sans', 'IBM Plex Mono'",
                 "workbench.startupEditor": "none",
-                "workbench.welcomePage.walkthroughs.openOnInstall": false
+                "workbench.welcomePage.walkthroughs.openOnInstall": false,
                 // repository specific settings go here
+                "bashIde.shellcheckArguments": "--external-sources"
             },
             "extensions": [
                 "ms-azuretools.vscode-docker",
