@@ -21,3 +21,4 @@ alias ga='git add'
 alias gcm='git commit -m'
 alias gp='git push'
 
+alias cdiff='code --diff $1 $2'
