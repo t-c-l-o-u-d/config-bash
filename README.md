@@ -12,7 +12,8 @@ Use this in your project:
 $ git submodule add https://github.com/t-c-l-o-u-d/config-bash.git .submodules/config-bash
 ```
 
-* `.bashrc` should be placed at `~/.bashrc`
+* `bash_profile` should be placed at `~/.bash_profile`
+* `bashrc` should be placed at `~/.config/bash/bashrc`
 * `aliases` should be placed at `~/.conifg/bash/aliases`
 * `functions` should be placed at `~/.config/bash/functions`
 * An additional file based on the `hostname` can be placed at `~/.config/bash/<hostname>`
