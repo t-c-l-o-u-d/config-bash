@@ -86,7 +86,6 @@ _NORMAL=$(tput sgr0)
 PS1_HOST="\[${_GREEN}\]\H\[${_NORMAL}\]"
 PS1_USER="\[${_CYAN}\]\u\[${_NORMAL}\]"
 
-
 # container detection - podman
 if [[ -s /run/.containerenv ]]; then
     _CNT_HOSTNAME="$(awk -F '[="]' '/name/{ print $3 }' /run/.containerenv) $(echo -e '\U0001F4E6')"
