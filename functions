@@ -50,7 +50,25 @@ extract() {
 }
 
 compress() {
-   tar --create --gzip --file $(basename ${1}).tar.gz ${1}
+    # Check if the input argument is provided and if the file or directory exists
+    if [ -z "${1}" ]; then
+        echo "Error: Missing argument."
+        return 1
+    elif [ ! -e "${1}" ]; then
+        echo "Error: '${1}' does not exist."
+        return 1
+    fi
+
+    # Get the base name and create the tar.gz file
+    local INPUT="${1}"
+    local OUTPUT="${INPUT}.tar.gz"
+    local DIR
+    DIR="$(dirname "${INPUT}")" "$(basename "${INPUT}")"
+
+    echo $DIR
+    # Create the tar.gz file using verbose options
+    tar --create --gzip --file="${OUTPUT}" --directory "${DIR}"
+    #tar --create --gzip --file=$(basename ${1}).tar.gz ${1}
 }
 
 # open directory in VSCode
@@ -68,6 +86,7 @@ rpm_extract() {
     rpm2cpio "${1}" | cpio --extract --make-directories --unconditional --preserve-modification-time
 }
 
+# removes everything podman related
 podman_rma() {
     podman stop --all || true
     buildah rm --all || true
@@ -77,6 +96,23 @@ podman_rma() {
     podman system prune --all --force || true
     podman system prune --external --force || true
     echo "Volumes were preserved. To remove them execute: 'podman system prune --volumes'"
+}
+
+_symlink() {
+    SOURCE="${1}"
+    DESTINATION="${2}"
+
+    # check if the destination is a symlink
+    if [ -L "${DESTINATION}" ]; then
+        # check if the symlink points to the correct source
+        CURRENT_FILE=$(readlink "${DESTINATION}")
+        if [ "${CURRENT_FILE}" != "${SOURCE}" ]; then
+            ln --symbolic --force "${SOURCE}" "${DESTINATION}"
+        fi
+    else
+        # create the symlink if it does not exist
+        ln --symbolic --force "${SOURCE}" "${DESTINATION}"
+    fi
 }
 
 
