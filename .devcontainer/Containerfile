@@ -13,7 +13,7 @@ RUN useradd --create-home --shell /usr/bin/bash --groups wheel ${USER}
 # =======================================
 
 # install bash tools
-RUN pacman --sync --noconfirm \
+RUN pacman --sync --refresh --noconfirm \
     bash-language-server \
     shellcheck \
     shfmt
