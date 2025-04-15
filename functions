@@ -2,10 +2,11 @@
 # GNU Affero General Public License v3.0 or later (see COPYING or https://www.gnu.org/licenses/agpl.txt)
 
 # sleeps and creates a countdown with a default duration of 5s
-show_wait_timer() {
+_show_wait_timer() {
     # hide cursor
     tput civis
-    local DURATION=${1:-5}
+    local DURATION
+    DURATION="${1:-5}"
     echo -n "Waiting: "
     while [ "${DURATION}" -ge 1 ]; do
         tput el
@@ -20,9 +21,10 @@ show_wait_timer() {
 }
 
 # extract a lot of stuff
-extract() {
+_extract() {
     if [ -f "${1}" ]; then
         # Get file type using the 'file' command
+        local FILE_TYPE
         FILE_TYPE="$(file --brief --mime-type "${1}")"
         case "${FILE_TYPE}" in
             application/x-tar)
@@ -49,56 +51,46 @@ extract() {
     fi
 }
 
-compress() {
-    # Check if the input argument is provided and if the file or directory exists
+_mkarchive() {
+    # check if the input argument is provided
     if [ -z "${1}" ]; then
         echo "Error: Missing argument."
         return 1
+    # check if the argument exists
     elif [ ! -e "${1}" ]; then
         echo "Error: '${1}' does not exist."
         return 1
     fi
 
-    # Get the base name and create the tar.gz file
-    local INPUT="${1}"
-    local OUTPUT="${INPUT}.tar.gz"
-    local DIR
-    DIR="$(dirname "${INPUT}")" "$(basename "${INPUT}")"
-
-    echo $DIR
-    # Create the tar.gz file using verbose options
-    tar --create --gzip --file="${OUTPUT}" --directory "${DIR}"
-    #tar --create --gzip --file=$(basename ${1}).tar.gz ${1}
-}
-
-# open directory in VSCode
-open() {
-    { nohup code "${1}" >/dev/null 2>&1 & disown; } 2>/dev/null; sleep .1;
+    tar --create --gzip --file="$(basename "${1}")".tar.gz "${1}"
 }
 
 # get public ip info using Mullvad's API
-public_ip_info() {
+_public_ip_info() {
     curl --silent https://am.i.mullvad.net/json | jq
 }
 
 # extract rpm contents into current directory
-rpm_extract() {
+_rpm_extract() {
     rpm2cpio "${1}" | cpio --extract --make-directories --unconditional --preserve-modification-time
 }
 
-# removes everything podman related
-podman_rma() {
-    podman stop --all || true
+# removes all containers and images
+_podman_rma() {
+    podman stop --all --time 2 --ignore
     buildah rm --all || true
-    buildah rmi --all || true
-    podman rm --all || true
-    podman rmi --all || true
+    buildah rmi --all --force || true
+    podman rm --all --force --time 2 --ignore
+    podman rmi --all --force --ignore
     podman system prune --all --force || true
     podman system prune --external --force || true
-    echo "Volumes were preserved. To remove them execute: 'podman system prune --volumes'"
+    echo "Volumes were preserved; to remove them execute: 'podman system prune --volumes'"
 }
 
+# creates a symlink
 _symlink() {
+    local SOURCE
+    local DESTINATION
     SOURCE="${1}"
     DESTINATION="${2}"
 
@@ -119,7 +111,7 @@ _symlink() {
 # ================
 # legacy functions
 # ================
-git_info() {
+_git_info() {
     if command -v git &>/dev/null && git rev-parse --is-inside-work-tree &>/dev/null; then
         GIT_UNPUSHED_COMMITS="$(git log --branches --not --remotes --oneline 2>/dev/null | wc --lines 2>/dev/null)"
         GIT_STAGED_CHANGES="$(git diff --cached --stat --name-status 2>/dev/null | wc --lines 2>/dev/null)"
