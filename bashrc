@@ -104,6 +104,9 @@ PS1="\n${PS1_USER}@${PS1_HOST}: \w \n\$ "
 if [ -z "${SSH_AUTH_SOCK}" ]; then
     # check for a currently running instance of the agent
     RUNNING_AGENT="$(pgrep --count --uid $(id --user) --full 'ssh-agent -s')"
+    if [ ! -d "${HOME}/.ssh" ]; then
+        mkdir "${HOME}/.ssh"
+    fi
     if [ "${RUNNING_AGENT}" = "0" ]; then
         # launch a new instance of the agent
         ssh-agent -s &>"${HOME}/.ssh/ssh-agent"
