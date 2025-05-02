@@ -107,6 +107,23 @@ _symlink() {
     fi
 }
 
+_append_path () {
+    case ":$PATH:" in
+        *:"$1":*)
+            ;;
+        *)
+            PATH="${PATH:+$PATH:}$1"
+    esac
+}
+
+_remove_path() {
+    PATH=:$PATH:
+    PATH=${PATH//:$1:/:}
+    PATH=${PATH#:}
+    PATH=${PATH%:}
+    export PATH
+}
+
 
 # ================
 # legacy functions
