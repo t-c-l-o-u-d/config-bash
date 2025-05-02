@@ -8,7 +8,7 @@ _show_wait_timer() {
     local DURATION
     DURATION="${1:-5}"
     echo -n "Waiting: "
-    while [ "${DURATION}" -ge 1 ]; do
+    while [ "${DURATION}" -ge 0 ]; do
         tput el
         echo -n "${DURATION}"
         tput cub "${#DURATION}"
